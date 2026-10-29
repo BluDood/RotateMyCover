@@ -77,12 +77,16 @@ object RotationManager {
 
     fun getTargetOrientation(context: Context): Int {
         val systemAutoRotate = try {
-            Settings.System.getInt(context.contentResolver, Settings.System.ACCELEROMETER_ROTATION) == 1
+            Settings.System.getInt(
+                context.contentResolver,
+                Settings.System.ACCELEROMETER_ROTATION
+            ) == 1
         } catch (_: Exception) {
             true
         }
 
-        val effectiveAutoRotate = _isAutoRotationEnabled && (!_followSystemRotation || systemAutoRotate)
+        val effectiveAutoRotate =
+            _isAutoRotationEnabled && (!_followSystemRotation || systemAutoRotate)
 
         return if (effectiveAutoRotate) {
             ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR

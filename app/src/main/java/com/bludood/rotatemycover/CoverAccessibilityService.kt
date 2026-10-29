@@ -26,7 +26,7 @@ class CoverAccessibilityService : AccessibilityService() {
     override fun onServiceConnected() {
         super.onServiceConnected()
         RotationManager.init(this)
-        RotationManager.setListener { 
+        RotationManager.setListener {
             refreshOverlay()
         }
         registerScreenReceiver()
@@ -45,9 +45,9 @@ class CoverAccessibilityService : AccessibilityService() {
     private fun refreshOverlay() {
         val displayManager = getSystemService(DISPLAY_SERVICE) as DisplayManager
         val displays = displayManager.displays
-        
+
         val coverDisplay = displays.find { it.displayId != Display.DEFAULT_DISPLAY } ?: return
-        
+
         if (coverDisplay.state == Display.STATE_ON) {
             addOverlayToDisplay(coverDisplay)
         } else {
@@ -62,7 +62,7 @@ class CoverAccessibilityService : AccessibilityService() {
             if (currentDisplayId == display.displayId) {
                 val windowManager = view.context.getSystemService(WINDOW_SERVICE) as WindowManager
                 val params = view.layoutParams as WindowManager.LayoutParams
-                
+
                 if (params.screenOrientation != targetOrientation) {
                     params.screenOrientation = targetOrientation
                     runCatching {
@@ -139,13 +139,13 @@ class CoverAccessibilityService : AccessibilityService() {
 
     private fun registerRotationObserver() {
         if (rotationObserver != null) return
-        
+
         rotationObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
                 refreshOverlay()
             }
         }
-        
+
         contentResolver.registerContentObserver(
             Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION),
             false,
@@ -160,7 +160,7 @@ class CoverAccessibilityService : AccessibilityService() {
             unregisterReceiver(it)
         }
         receiver = null
-        
+
         rotationObserver?.let {
             contentResolver.unregisterContentObserver(it)
         }
